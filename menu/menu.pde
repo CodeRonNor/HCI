@@ -4,6 +4,7 @@ ControlP5 cp5Setting;
 ControlP5 cp5Highscore;
 ControlP5 cp5Play;
 ControlP5 cp5Instructions;
+Music music;
 
 //The current state
 int state;
@@ -14,6 +15,8 @@ void setup() {
   stroke(255);
   fill(0, 102, 153);
   textSize(32);
+  
+  music = new Music(this);
   
   initialize();
 }
@@ -38,6 +41,9 @@ public void mainMenuInitialize(){
   cp5MainMenu.addButton("highScoreButton").setLabel("HighScore").setPosition(width/2-200, height/2+0).setSize(400,60);
   cp5MainMenu.addButton("instructionButton").setLabel("Instructions").setPosition(width/2-200, height/2+70).setSize(400,60);
   cp5MainMenu.addButton("exitButton").setLabel("Exit").setPosition(width/2-200, height/2+140).setSize(400,60);
+  
+  // menu background music
+  music.menu();
   
   // we initialize the state with the main menu
   state = 1;
@@ -83,6 +89,10 @@ public void startButton() {
   cp5Setting.getController("difficult2").show();
   cp5Setting.getController("difficult3").show();
   cp5Setting.getController("back").show();
+  
+  // change music
+  music.game();
+  //music.playThroughSpace();
   
   state = 2;
   
@@ -142,6 +152,8 @@ public void back(){
   cp5MainMenu.getController("highScoreButton").show();
   cp5MainMenu.getController("instructionButton").show();
   cp5MainMenu.getController("exitButton").show();
+  
+  music.menu();
   
   // hide all the other items
   cp5Setting.getController("difficult1").hide();
