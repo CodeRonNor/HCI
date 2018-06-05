@@ -19,13 +19,15 @@ class UserInput {
 
   /*
    * init the UserInput
+   * change the class of given attribute if main class name is different
    */
   public UserInput(HCI2_expert main) {
     control = ControlIO.getInstance(main);//creates the control object for the user input control
   }
 
   /*
-   * call this with true to play initialize xbox-controller input type
+   * if uiType = true, then UserInput will use keyboard
+   * if uiType = false, UserInput will initialize XboxInput and uses the connected Xbox-Controller
    */
   public void playWithKeyboard(boolean uiType) {
     if (uiType) {
@@ -71,35 +73,37 @@ class UserInput {
       return xbMove.getValue() < -0.5f;
   }
 
-  public boolean attackPressed() {
-    if (playsWithKeyboard) {
-      if (keyCode == ' ') {
-        keyCode = 'n';
-        return true;
-      } else 
-      return false;
-    } else {
-      if (!attackWasPressed && xbAttack1.pressed()) {
-        attackWasPressed = true;
-        return true;
-      } else {
-        if (!xbAttack1.pressed())
-          attackWasPressed = false;
-        return false;
-      }
-    }
-  }
+// !! OLD attackPressed() !!
+  //public boolean attackPressed() {
+  //  if (playsWithKeyboard) {
+  //    if (keyCode == ' ') {
+  //      keyCode = 'n';
+  //      return true;
+  //    } else 
+  //    return false;
+  //  } else {
+  //    if (!attackWasPressed && xbAttack1.pressed()) {
+  //      attackWasPressed = true;
+  //      return true;
+  //    } else {
+  //      if (!xbAttack1.pressed())
+  //        attackWasPressed = false;
+  //      return false;
+  //    }
+  //  }
+  //}
 
-  public boolean speedUpPressed() {
-    if (playsWithKeyboard) {
-      return KEYS[SHIFT];
-    } else
-      return xbSpeed1.getValue() < -0.5f;
-  }
+// !! OLD speedUpPressed() !!
+  //public boolean speedUpPressed() {
+  //  if (playsWithKeyboard) {
+  //    return KEYS[SHIFT];
+  //  } else
+  //    return xbSpeed1.getValue() < -0.5f;
+  //}
 
 
   // for second play mode
-  public boolean attackPressed2() {
+  public boolean attackPressed() {
     if (playsWithKeyboard) {
       if (keyCode == ' ') {
         keyCode = 'n';
@@ -122,7 +126,7 @@ class UserInput {
     }
   }
 
-  public boolean speedUpPressed2() {
+  public boolean speedUpPressed() {
     if (playsWithKeyboard) {
       return KEYS[SHIFT];
     } else
