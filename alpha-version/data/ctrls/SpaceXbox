@@ -1,0 +1,4 @@
+Spaceship controller
+MOVE	left stick	3	SLIDER	X-Achse	0	1.0	0.0
+A_BTN	a button	1	BUTTON	Taste 0	0	0.0	0.0
+TRIGGER	both triggers: left > 0, right < 0	3	SLIDER	Z-Achse	0	1.0	0.0
