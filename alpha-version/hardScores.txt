@@ -1,0 +1,12 @@
+BeautyfulRON, 70000
+Superman, 5000
+Batman, 5000
+Steffen, 700
+Ron, 400
+Kerstin, 250
+BeautyfulRON, 250
+kerstin, 250
+Hansi, 50
+Alex, 7
+Alex, 7
+Alexxx, 7
