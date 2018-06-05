@@ -5,62 +5,131 @@ import org.gamecontrolplus.gui.*;
 class UserInput {
   // variables for game control plus
   ControlIO control; // This one is essential
-  ControlDevice device; // ControlDevice might be a joystick, gamepad, mouse etc.
-  ControlButton leftB; // A device will have some combination of buttons, hats and sliders
-  ControlButton rightB;
-  ControlButton attackB;
-  ControlButton speedB;
   //ControlHat hat;
-  //ControlSlider slider;
+  // for input from a Xbox controller
+  ControlDevice deviceXbox;
+  ControlSlider xbMove;
+  ControlSlider xbSpeed1;
+  ControlButton xbAttack1;
+  ControlButton xbSpeed2;
+  ControlSlider xbAttack2;
+
   boolean playsWithKeyboard;
+  boolean attackWasPressed = false;
 
-  public UserInput(HCI2_Ctrl main) {
+  /*
+   * init the UserInput
+   * change the class of given attribute if main class name is different
+   */
+  public UserInput(HCI2_expert main) {
     control = ControlIO.getInstance(main);//creates the control object for the user input control
-    initMouseInput();
-    playsWithKeyboard = true;
   }
 
-  private void initMouseInput() {
-    device = control.getMatchedDevice("SpaceMouse");
-    leftB = device.getButton("LEFT");
-    rightB = device.getButton("RIGHT");
-    attackB = device.getButton("ATTACK");
-    speedB = device.getButton("SPEED");
+  /*
+   * if uiType = true, then UserInput will use keyboard
+   * if uiType = false, UserInput will initialize XboxInput and uses the connected Xbox-Controller
+   */
+  public void playWithKeyboard(boolean uiType) {
+    if (uiType) {
+      playsWithKeyboard = true;
+    } else {
+      playsWithKeyboard = false;
+      initXBoxInput();
+    }
   }
 
-  public void useKeyBoard() {
-    playsWithKeyboard = true;
+  private void initXBoxInput() {
+    deviceXbox = control.getMatchedDevice("ctrls/SpaceXbox");
+    xbMove = deviceXbox.getSlider("MOVE");
+    xbMove.setTolerance(0.1);
+    xbSpeed1 = deviceXbox.getSlider("TRIGGER");
+    xbSpeed1.setTolerance(0.1);
+    xbAttack1 = deviceXbox.getButton("A_BTN");
+    // different play mode: left and right triggers to shoot, a button to speed
+    xbSpeed2 = deviceXbox.getButton("A_BTN");
+    xbSpeed2.setTolerance(0.05);
+    xbAttack2 = deviceXbox.getSlider("TRIGGER");
   }
 
-  public void useMouse() {
-    playsWithKeyboard = false;
-  }
+  //public void useKeyBoard() {
+  //  playsWithKeyboard = true;
+  //}
+
+  //public void useMouse() {
+  //  playsWithKeyboard = false;
+  //}
 
   public boolean leftPressed() {
     if (playsWithKeyboard)
       return KEYS[LEFT];
     else
-      return leftB.pressed();
+      return xbMove.getValue() > 0.5;
   }
 
   public boolean rightPressed() {
     if (playsWithKeyboard)
       return KEYS[RIGHT];
     else
-      return rightB.pressed();
+      return xbMove.getValue() < -0.5f;
   }
 
+// !! OLD attackPressed() !!
+  //public boolean attackPressed() {
+  //  if (playsWithKeyboard) {
+  //    if (keyCode == ' ') {
+  //      keyCode = 'n';
+  //      return true;
+  //    } else 
+  //    return false;
+  //  } else {
+  //    if (!attackWasPressed && xbAttack1.pressed()) {
+  //      attackWasPressed = true;
+  //      return true;
+  //    } else {
+  //      if (!xbAttack1.pressed())
+  //        attackWasPressed = false;
+  //      return false;
+  //    }
+  //  }
+  //}
+
+// !! OLD speedUpPressed() !!
+  //public boolean speedUpPressed() {
+  //  if (playsWithKeyboard) {
+  //    return KEYS[SHIFT];
+  //  } else
+  //    return xbSpeed1.getValue() < -0.5f;
+  //}
+
+
+  // for second play mode
   public boolean attackPressed() {
-    if (playsWithKeyboard) 
-      return KEYS[CONTROL];
-    else
-      return attackB.pressed();
+    if (playsWithKeyboard) {
+      if (keyCode == ' ') {
+        keyCode = 'n';
+        return true;
+      } else 
+      return false;
+    } else {
+      if (xbAttack2.getValue() > -0.5f && xbAttack2.getValue() < 0.5f) {
+        attackWasPressed = false;
+        return false;
+      } else {
+        if (attackWasPressed) {
+          return false;
+        } else {
+          //if (xbAttack2.getValue() < -0.5f || xbAttack2.getValue() > 0.5f) {
+          attackWasPressed = true;
+          return true;
+        }
+      }
+    }
   }
 
   public boolean speedUpPressed() {
     if (playsWithKeyboard) {
       return KEYS[SHIFT];
     } else
-      return speedB.pressed();
+      return xbSpeed2.pressed();
   }
 }
