@@ -1,47 +1,79 @@
+import java.util.*;
+
 class Player {
   float paddleWidth;
   float paddleHeight;
   float x;
   float y;
-  final float PADDLE_SPEED;
-  
-final float rad;
+  final float PLAYER_SPEED;
+  final float RAD;
+  float theta;
+  PVector spaceShip;
+  ArrayList<Bullet> bullets;
 
-float angle;
+
+  int frameNumber;
+  int frameCycle;
+  final int PR = 40; // player radius
+
+  //Bullet bullet;
 
   public Player() {
-    PADDLE_SPEED = 3;
-
+    PLAYER_SPEED = 3;
     paddleWidth = 50;
     paddleHeight = 10;
-
-    x = paddleWidth/2;
+    x = 0;
     y = height/2-50;
-    rad = sqrt(sq(x)+sq(y));
-    
-    angle = 0;
-    
+    RAD = sqrt(sq(x)+sq(y));
+    theta = HALF_PI;
+    spaceShip = new PVector(x, y);
+
+    frameNumber = 0;
+    frameCycle = frameNumber;
+
+    //bullet = new Bullet(spaceShip);
+
+    bullets = new ArrayList<Bullet>();
   }
 
   void show() {
-    //x = constrain(x, -width/2, width/2-paddleWidth);
 
-    noFill();
-    stroke(255);
-    ellipse(0,0,rad*2,rad*2);
-    
+    // Polar to Cartesian
+    spaceShip.x = RAD * cos(theta);
+    spaceShip.y = RAD * sin(theta);
 
-    //x = sqrt((sq(rad)-sq(y)));
-    y = sqrt((sq(rad)-sq(x)));
-    println("x: "+ x);
-    println("y: "+ y);
-    
+    // Translate to (x,y) coordinates and rotate the player to always face the center
     pushMatrix();
-    
-    angle = map(x,0,rad,0,PI);
-    rotate(angle);
-    rect(x, y, paddleWidth, paddleHeight, 1);
+
+    translate(spaceShip.x, spaceShip.y);
+    rotate(atan2(spaceShip.y, spaceShip.x)-HALF_PI);
+
+    // Illusion of movement of the ship through cycling through the images, per two frames
+    frameCycle = frameCycle >= 4 ? -1 : frameCycle; // Could also increment by 1/2 or 1/3
+    frameCycle++;  
+
+    imageMode(CENTER);
+    image(spaceShips[frameNumber = frameCycle < 2 ? 0 : 1], 0, 0);
     popMatrix();
-    
+    bulletBlaster();
+  }
+
+
+
+
+
+  public void bulletBlaster() {
+    Iterator<Bullet> i = bullets.listIterator();
+    while (i.hasNext()) {
+      Bullet b = i.next();
+      b.show();
+      if (b.xPos == 0 && b.yPos == 0) {
+        i.remove();
+      }
+    }
+  }
+
+  void shoot() {
+    bullets.add(new Bullet(spaceShip));
   }
 }
