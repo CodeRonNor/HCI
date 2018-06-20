@@ -1,0 +1,5 @@
+Spaceship Controller
+LEFT	left MB pressed	1	BUTTON	Taste 0	0	0.0	0.0
+RIGHT	right MB pressed	1	BUTTON	Taste 1	0	0.0	0.0
+ATTACK	attackButton	1	BUTTON	Taste 4	0	0.0	0.0
+SPEED	speedButton	1	BUTTON	Taste 3	0	0.0	0.0
